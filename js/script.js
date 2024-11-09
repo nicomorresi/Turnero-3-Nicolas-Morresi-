@@ -1,35 +1,6 @@
-let turnos = [];
+// Recuperar turnos del localStorage al cargar la página
+let turnos = JSON.parse(localStorage.getItem('turnos')) || [];
 let horaInicio = 9; // Hora de inicio para los turnos (ejemplo: 9 AM)
-
-function obtenerDatosTurno() {
-    let nombre = prompt("¿Cuál es tu nombre?");
-    while (!nombre) {
-        nombre = prompt("Por favor, ingresa tu nombre:");
-    }
-
-    let tipoVehiculo = prompt("¿Qué tipo de vehículo tienes? (1: Auto, 2: Camioneta, 3: Traffic)");
-    while (!['1', '2', '3'].includes(tipoVehiculo)) {
-        tipoVehiculo = prompt("Por favor, selecciona un tipo de vehículo válido (1: Auto, 2: Camioneta, 3: Traffic):");
-    }
-
-    let marca = prompt("¿De qué marca es tu vehículo?");
-    while (!marca) {
-        marca = prompt("Por favor, ingresa la marca de tu vehículo:");
-    }
-
-    let servicio = prompt("¿Qué tipo de servicio deseas? (1: Lavado básico, 2: Lavado completo, 3: Tratamiento)");
-    while (!['1', '2', '3'].includes(servicio)) {
-        servicio = prompt("Por favor, selecciona un servicio válido (1: Lavado básico, 2: Lavado completo, 3: Tratamiento):");
-    }
-
-    return {
-        nombre,
-        tipoVehiculo: tipoVehiculo === '1' ? 'Auto' : tipoVehiculo === '2' ? 'Camioneta' : 'Traffic',
-        marca,
-        servicio: servicio === '1' ? 'Lavado básico' : servicio === '2' ? 'Lavado completo' : 'Tratamiento',
-        fecha: calcularFechaTurno()
-    };
-}
 
 function calcularFechaTurno() {
     let nextHour = new Date();
@@ -41,6 +12,40 @@ function calcularFechaTurno() {
     return nextHour.toLocaleString();
 }
 
+function obtenerDatosTurno() {
+    let nombre = document.getElementById("nombre").value;
+    let tipoVehiculo = document.getElementById("tipoVehiculo").value;
+    let marca = document.getElementById("marca").value;
+    let servicio = document.getElementById("servicio").value;
+    
+    // Validación de datos
+    if (!nombre || !tipoVehiculo || !marca || !servicio) {
+        mostrarMensaje("Todos los campos son obligatorios.", "danger");
+        return null;
+    }
+
+    return {
+        nombre,
+        tipoVehiculo,
+        marca,
+        servicio,
+        fecha: calcularFechaTurno()
+    };
+}
+
+// Mostrar mensaje en la parte superior
+function mostrarMensaje(mensaje, tipo) {
+    const mensajeElemento = document.getElementById("mensaje");
+    mensajeElemento.textContent = mensaje;
+    mensajeElemento.className = `alert alert-${tipo}`;
+    mensajeElemento.style.display = 'block';
+
+    // Ocultar mensaje después de 3 segundos
+    setTimeout(() => {
+        mensajeElemento.style.display = 'none';
+    }, 3000);
+}
+
 function mostrarTurnos() {
     const contenedor = document.getElementById("turnos");
     contenedor.innerHTML = ''; // Limpiar contenido anterior
@@ -50,24 +55,53 @@ function mostrarTurnos() {
         return;
     }
 
+    let tabla = `
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Vehículo</th>
+                    <th>Marca</th>
+                    <th>Servicio</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    
     turnos.forEach((turno, index) => {
-        contenedor.innerHTML += `
-            <div class="alert alert-info">
-                <strong>Turno ${index + 1}:</strong> ${turno.nombre} - ${turno.tipoVehiculo} - ${turno.marca} - ${turno.servicio} - ${turno.fecha}
-            </div>
+        tabla += `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${turno.nombre}</td>
+                <td>${turno.tipoVehiculo}</td>
+                <td>${turno.marca}</td>
+                <td>${turno.servicio}</td>
+                <td>${turno.fecha}</td>
+            </tr>
         `;
     });
+
+    tabla += '</tbody></table>';
+    contenedor.innerHTML = tabla;
 }
 
-function main() {
-    let continuar = true;
-
-    while (continuar) {
-        let nuevoTurno = obtenerDatosTurno();
+function guardarTurno(event) {
+    event.preventDefault(); // Prevenir el envío del formulario
+    
+    let nuevoTurno = obtenerDatosTurno();
+    if (nuevoTurno) {
         turnos.push(nuevoTurno);
-        mostrarTurnos();
-        continuar = confirm("¿Deseas agregar otro turno?");
+        localStorage.setItem('turnos', JSON.stringify(turnos)); // Guardar en localStorage
+        mostrarTurnos(); // Actualizar la lista de turnos
+        mostrarMensaje("Turno agregado correctamente.", "success"); // Notificar al usuario
+        document.getElementById("formTurno").reset(); // Limpiar formulario
     }
 }
 
-document.getElementById("iniciar").addEventListener("click", main);
+// Cargar los turnos desde el localStorage al cargar la página
+document.addEventListener("DOMContentLoaded", mostrarTurnos);
+
+document.getElementById("formTurno").addEventListener("submit", guardarTurno);
+
