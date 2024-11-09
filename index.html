@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cleaning Detailing-Turnos</title>
+    <link rel="icon" type="image/png" href="../images/carro-deportivo.png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+    <div class="container text-center mt-5">
+        <h1 class="mb-4">Turnos de Lavado "Cleaning Detailing"</h1>
+        
+        <!-- Formulario para ingresar los datos del turno -->
+        <form id="formTurno" class="mb-4">
+            <div class="form-group">
+                <label for="nombre">Nombre del cliente:</label>
+                <input type="text" class="form-control" id="nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="tipoVehiculo">Tipo de vehículo:</label>
+                <select class="form-control" id="tipoVehiculo" required>
+                    <option value="">Selecciona el tipo</option>
+                    <option value="Auto">Auto</option>
+                    <option value="Camioneta">Camioneta</option>
+                    <option value="Traffic">Traffic</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="marca">Marca del vehículo:</label>
+                <input type="text" class="form-control" id="marca" required>
+            </div>
+            <div class="form-group">
+                <label for="servicio">Servicio solicitado:</label>
+                <select class="form-control" id="servicio" required>
+                    <option value="">Selecciona el servicio</option>
+                    <option value="Lavado básico">Lavado básico</option>
+                    <option value="Lavado completo">Lavado completo</option>
+                    <option value="Tratamiento">Tratamiento</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg">Iniciar Turno</button>
+        </form>
+        
+        <!-- Sección de resultados -->
+        <div id="mensaje" class="alert alert-info" style="display: none;"></div>
+        
+        <div id="turnos" class="mt-4"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
