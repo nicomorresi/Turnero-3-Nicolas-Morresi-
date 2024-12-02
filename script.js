@@ -6,7 +6,6 @@ function calcularFechaTurno() {
     let nextHour = new Date();
     let turnosPorHora = 1; // Cambiar este valor si quieres más de un turno por hora
     let horasTranscurridas = Math.floor(turnos.length / turnosPorHora);
-    
     nextHour.setHours(horaInicio + horasTranscurridas);
     nextHour.setMinutes(0); // Minutos a 0
     return nextHour.toLocaleString();
@@ -17,7 +16,6 @@ function obtenerDatosTurno() {
     let tipoVehiculo = document.getElementById("tipoVehiculo").value;
     let marca = document.getElementById("marca").value;
     let servicio = document.getElementById("servicio").value;
-    
     // Validación de datos
     if (!nombre || !tipoVehiculo || !marca || !servicio) {
         mostrarMensaje("Todos los campos son obligatorios.", "danger");
@@ -69,7 +67,6 @@ function mostrarTurnos() {
             </thead>
             <tbody>
     `;
-    
     turnos.forEach((turno, index) => {
         tabla += `
             <tr>
@@ -89,7 +86,6 @@ function mostrarTurnos() {
 
 function guardarTurno(event) {
     event.preventDefault(); // Prevenir el envío del formulario
-    
     let nuevoTurno = obtenerDatosTurno();
     if (nuevoTurno) {
         turnos.push(nuevoTurno);
